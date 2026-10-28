@@ -36,9 +36,25 @@ namespace AnemoWallpaper
         public const uint SWP_SHOWWINDOW = 0x0040;
         public const uint SWP_FRAMECHANGED = 0x0020;
 
+        public const int GWL_STYLE = -16;
+        public const int GWL_EXSTYLE = -20;
+        public const int WS_CHILD = 0x40000000;
+        public const int WS_POPUP = unchecked((int)0x80000000);
+        public const int WS_VISIBLE = 0x10000000;
+        public const int WS_CLIPSIBLINGS = 0x04000000;
+        public const int WS_CLIPCHILDREN = 0x02000000;
+
         public const int WS_EX_TOOLWINDOW = 0x00000080;
         public const int WS_EX_NOACTIVATE = 0x08000000;
-        public const int GWL_EXSTYLE = -20;
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetParent(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern bool IsWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, ref POINT lpPoints, uint cPoints);
 
         public delegate bool EnumWindowsProc(IntPtr hwnd, IntPtr lParam);
 
@@ -131,13 +147,21 @@ namespace AnemoWallpaper
 
             SetParent(hwnd, targetParent);
 
+            // Strip WS_POPUP and apply true WS_CHILD + clipping styles so Explorer redraws never overwrite our window
+            int style = GetWindowLong(hwnd, GWL_STYLE);
+            style &= ~WS_POPUP;
+            style |= (WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
+            SetWindowLong(hwnd, GWL_STYLE, style);
+
             int ex = GetWindowLong(hwnd, GWL_EXSTYLE);
             SetWindowLong(hwnd, GWL_EXSTYLE, ex | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE);
 
-            Rectangle v = SystemInformation.VirtualScreen;
-            int x = bounds.X - v.X, y = bounds.Y - v.Y;
+            POINT pt = new POINT { X = bounds.X, Y = bounds.Y };
+            MapWindowPoints(IntPtr.Zero, targetParent, ref pt, 1);
+
             IntPtr after = (modern && defView != IntPtr.Zero) ? defView : IntPtr.Zero;
-            SetWindowPos(hwnd, after, x, y, bounds.Width, bounds.Height, SWP_NOACTIVATE | SWP_SHOWWINDOW | SWP_FRAMECHANGED);
+            SetWindowPos(hwnd, after, pt.X, pt.Y, bounds.Width, bounds.Height,
+                SWP_NOACTIVATE | SWP_SHOWWINDOW | SWP_FRAMECHANGED);
             return modern ? "attached (Progman child, 24H2)" : "attached (WorkerW, classic)";
         }
 
@@ -187,6 +211,38 @@ namespace AnemoWallpaper
             Controls.Add(_web);
         }
 
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.Style |= (Native.WS_CLIPSIBLINGS | Native.WS_CLIPCHILDREN);
+                return cp;
+            }
+        }
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            // Suppress background erase so D3D / WebView2 surface never flickers or gets wiped
+        }
+
+        public void MaintainAttachment()
+        {
+            if (_windowed || !IsHandleCreated) return;
+            IntPtr parent = Native.GetParent(Handle);
+            if (parent == IntPtr.Zero || !Native.IsWindow(parent) || !Native.IsWindowVisible(Handle))
+            {
+                Native.AttachToDesktop(Handle, _bounds);
+            }
+            else
+            {
+                Native.POINT pt = new Native.POINT { X = _bounds.X, Y = _bounds.Y };
+                Native.MapWindowPoints(IntPtr.Zero, parent, ref pt, 1);
+                Native.SetWindowPos(Handle, IntPtr.Zero, pt.X, pt.Y, _bounds.Width, _bounds.Height,
+                    Native.SWP_NOACTIVATE | Native.SWP_SHOWWINDOW | Native.SWP_NOZORDER);
+            }
+        }
+
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
@@ -217,8 +273,11 @@ namespace AnemoWallpaper
                 var opts = new CoreWebView2EnvironmentOptions(
                     "--autoplay-policy=no-user-gesture-required " +
                     "--enable-gpu-rasterization --enable-features=VaapiVideoDecoder,D3D11VideoDecoder " +
-                    "--disable-features=msSmartScreenProtection,Translate " +
-                    "--disable-background-timer-throttling --use-fake-ui-for-media-stream");
+                    "--disable-features=msSmartScreenProtection,Translate,CalculateNativeWinOcclusion,IntensiveWakeUpThrottling,ThrottleDisplayNoneAndDisplayInlineScript " +
+                    "--disable-background-timer-throttling " +
+                    "--disable-backgrounding-occluded-windows " +
+                    "--disable-renderer-backgrounding " +
+                    "--use-fake-ui-for-media-stream");
                 _sharedEnv = await CoreWebView2Environment.CreateAsync(null, userData, opts);
             }
 
@@ -501,7 +560,7 @@ namespace AnemoWallpaper
 
         private void PumpCursor()
         {
-            if (_lastSentPause || _windows.Count == 0) return;
+            if (_userPaused || _windows.Count == 0) return;
             Native.POINT p;
             if (!Native.GetCursorPos(out p)) return;
             if (p.X == _lastCx && p.Y == _lastCy) return;
@@ -519,35 +578,29 @@ namespace AnemoWallpaper
             }
         }
 
-        private bool IsDesktopCovered()
+        private void MaintainWindows()
         {
-            int qs;
-            if (Native.SHQueryUserNotificationState(out qs) == 0 && (qs == 2 || qs == 3 || qs == 4))
-                return true;
-
-            IntPtr fg = Native.GetForegroundWindow();
-            if (fg == IntPtr.Zero || !Native.IsWindowVisible(fg) || Native.IsIconic(fg)) return false;
-            if (ShellClasses.Contains(Native.ClassOf(fg))) return false;
-
-            Native.RECT r;
-            if (!Native.GetWindowRect(fg, out r)) return false;
-            Rectangle win = Rectangle.FromLTRB(r.Left, r.Top, r.Right, r.Bottom);
-
             foreach (var w in _windows)
             {
-                Rectangle area = w.TargetScreen.WorkingArea;
-                Rectangle inter = Rectangle.Intersect(win, area);
-                if (!inter.IsEmpty)
-                {
-                    double ratio = (inter.Width * (double)inter.Height) / (area.Width * (double)area.Height);
-                    if (ratio >= 0.95) return true;
-                }
+                try { w.MaintainAttachment(); } catch { }
+            }
+        }
+
+        private bool IsDesktopCovered()
+        {
+            // Only auto-sleep if screen is locked or full-screen exclusive DirectX game is active.
+            // Never sleep or blank out when the user is simply working on another monitor!
+            int qs;
+            if (Native.SHQueryUserNotificationState(out qs) == 0 && qs == 3) // QUNS_RUNNING_D3D_FULL_SCREEN
+            {
+                return true;
             }
             return false;
         }
 
         private void EvaluateSleep()
         {
+            MaintainWindows(); // Self-healing watchdog: detects Explorer repaints/resets and restores Z-order
             _autoAsleep = IsDesktopCovered();
             ApplyPauseState();
         }

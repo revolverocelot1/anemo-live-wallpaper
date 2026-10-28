@@ -442,14 +442,12 @@ export const LiveWallpaperRenderer: React.FC<LiveWallpaperRendererProps> = ({
     }
   }, [manualBlinkCounter]);
 
-  // Handle video pause / play on `paused` prop change
+  // Ensure video element remains active and loaded so D3D11 surface is never evicted
   useEffect(() => {
     const vid = videoRef.current;
     if (!vid) return;
-    if (paused) {
-      if (!vid.paused) vid.pause();
-    } else {
-      if (vid.paused) vid.play().catch(() => {});
+    if (vid.paused) {
+      vid.play().catch(() => {});
     }
   }, [paused]);
 
@@ -654,16 +652,16 @@ export const LiveWallpaperRenderer: React.FC<LiveWallpaperRendererProps> = ({
         const renderLoop = (nowMs: number) => {
           if (isCancelled || !program) return;
 
-          // Full sleep when paused (covered desktop / locked screen): 0% CPU
+          // Throttle when paused (locked screen / manual pause): reduce draw frequency but never blank out
           if (pausedRef.current) {
-            if (vid && !vid.paused) vid.pause();
             lastFrameTimeMs = nowMs;
             sleepTimer = window.setTimeout(() => {
               rafId = requestAnimationFrame(renderLoop);
-            }, 250);
-            return;
+            }, 500);
+            // Continue drawing frame so character and background never disappear
+          } else if (vid && vid.paused) {
+            vid.play().catch(() => {});
           }
-          if (vid && vid.paused) vid.play().catch(() => {});
 
           const dtSec = Math.min(0.1, Math.max(0.001, (nowMs - lastFrameTimeMs) / 1000.0));
           lastFrameTimeMs = nowMs;
