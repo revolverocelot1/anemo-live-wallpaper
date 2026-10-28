@@ -147,8 +147,8 @@
 
 .vcap-actions {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
 }
 .vcap-chip {
   min-height: 0;
@@ -177,6 +177,23 @@
 .vcap-chip:active {
   transform: scale(0.95);
 }
+
+.vcap-chip--download {
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  font-weight: 550;
+}
+.vcap-chip--download:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 0.5px 0.5px rgba(255, 255, 255, 0.6);
+}
+.vcap-chip--download:active {
+  transform: scale(0.95);
+}
+
 .vcap-chip:disabled {
   opacity: 0.4;
   cursor: default;
@@ -397,6 +414,9 @@
 }
 
 @media (max-width: 540px) {
+  .vcap-actions {
+    grid-template-columns: repeat(3, 1fr);
+  }
   .vcap {
     width: calc(100vw - 24px);
   }

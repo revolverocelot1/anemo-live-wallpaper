@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ArrowLeft, Camera, CameraOff, Crosshair, Eye, Maximize2, Minimize2, SlidersHorizontal, Users } from 'lucide-react';
+import { ArrowLeft, Camera, CameraOff, Crosshair, Download, Eye, Maximize2, Minimize2, SlidersHorizontal, Users } from 'lucide-react';
 import './spatialCapsule.css';
 import type { RoxyTrackMode, RoxyTrackStatus } from '../hooks/useRoxyTracking';
 
@@ -49,6 +49,8 @@ export interface SpatialCapsuleProps {
   hidden: boolean;
   homeUrl?: string;
   homeLabel?: string;
+  downloadUrl?: string;
+  downloadLabel?: string;
   trackMode: RoxyTrackMode;
   onTrackMode: (m: RoxyTrackMode) => void;
   webcamActive: boolean;
@@ -315,6 +317,16 @@ export const SpatialCapsule: React.FC<SpatialCapsuleProps> = (p) => {
                   {p.isFullscreen ? 'Window' : 'Full'}
                 </button>
               )}
+              <a
+                href={p.downloadUrl ?? 'https://github.com/revolverocelot1/anemo-live-wallpaper/releases/latest'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="vcap-chip vcap-chip--download"
+                data-testid="download-release-btn"
+                title="Download Windows Live Wallpaper (Latest GitHub Release)"
+              >
+                <Download size={14} /> {p.downloadLabel ?? 'Download'}
+              </a>
             </div>
             <div className="vcap-status" data-testid="capsule-status">
               {statusLine}
