@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+web-engine/node_modules/
+
+# Build artifacts
+dist/
+build/
+web-engine/dist/
+desktop-host/bin/
+desktop-host/obj/
+desktop-host/.cache/
+
+# Local cache & logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+
+# Large release binaries (>100MB: publish directly to GitHub Releases)
+releases/*.exe
+releases/*.zip
+*.exe
+*.zip
+*.7z
+
+# Local development overrides
+*.local
+.env
+.env.*.local

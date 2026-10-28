@@ -1,0 +1,262 @@
+{
+  "version": "2.5.0",
+  "resolution": {
+    "width": 2552,
+    "height": 1440
+  },
+  "hasBgVideo": true,
+  "hasEyeVideo": true,
+  "eyeVideoMeta": {
+    "ingested": true,
+    "frameCount": 362,
+    "fps": 24.0,
+    "patchRectPx": [
+      1148,
+      562,
+      256,
+      120
+    ]
+  },
+  "assets": {
+    "baseImage": "/live-wallpaper/Screenshot (152).jpg",
+    "scleraBase": "/live-wallpaper/sclera_base.png",
+    "irisLayer": "/live-wallpaper/iris_layer.png",
+    "bangsAndFrameMask": "/live-wallpaper/bangs_and_frame_mask.png",
+    "faceAnchor": "/live-wallpaper/face_anchor.png",
+    "windMask": "/live-wallpaper/wind_mask.png",
+    "bgVideo": "/live-wallpaper/bg_loop.mp4",
+    "eyeVideo": "/live-wallpaper/eye_contact.mp4",
+    "eyeRig": "/live-wallpaper/eye_rig.json",
+    "eyeSheet0": "/live-wallpaper/eye_sheet_0.jpg",
+    "eyeSheet1": "/live-wallpaper/eye_sheet_1.jpg",
+    "eyePatchMask": "/live-wallpaper/eye_patch_mask.png",
+    "irisLayerV2": "/live-wallpaper/iris_layer_v2.png"
+  },
+  "headBounds": {
+    "xMin": 0.424765,
+    "yMin": 0.214583,
+    "xMax": 0.577978,
+    "yMax": 0.544444,
+    "px": [
+      1084,
+      309,
+      1475,
+      784
+    ]
+  },
+  "leftEye": {
+    "center": [
+      0.47355,
+      0.426528
+    ],
+    "downCenter": [
+      0.47308,
+      0.428056
+    ],
+    "centerPx": [
+      1208.5,
+      614.2
+    ],
+    "irisRadii": [
+      0.005799,
+      0.00875
+    ],
+    "irisRadiiPx": [
+      14.8,
+      12.6
+    ],
+    "socketBounds": {
+      "xMin": 0.462774,
+      "yMin": 0.420833,
+      "xMax": 0.48315,
+      "yMax": 0.436111,
+      "px": [
+        1181,
+        606,
+        1233,
+        628
+      ]
+    },
+    "upperCurve": [
+      [
+        0.462774,
+        0.422222
+      ],
+      [
+        0.466301,
+        0.421181
+      ],
+      [
+        0.471003,
+        0.421875
+      ],
+      [
+        0.475705,
+        0.423958
+      ],
+      [
+        0.479624,
+        0.426736
+      ],
+      [
+        0.48315,
+        0.429514
+      ]
+    ],
+    "lowerCurve": [
+      [
+        0.462774,
+        0.425
+      ],
+      [
+        0.466301,
+        0.430208
+      ],
+      [
+        0.471003,
+        0.434722
+      ],
+      [
+        0.475705,
+        0.436111
+      ],
+      [
+        0.479624,
+        0.435278
+      ],
+      [
+        0.48315,
+        0.432639
+      ]
+    ],
+    "specularPos": [
+      0.471395,
+      0.424306
+    ],
+    "maxShiftNormalized": [
+      0.004702,
+      0.003819
+    ],
+    "eyelidWarpWeights": {
+      "upperFollow": 0.3,
+      "lowerFollow": 0.14,
+      "blinkTravel": 0.008079
+    }
+  },
+  "rightEye": {
+    "center": [
+      0.523217,
+      0.442604
+    ],
+    "downCenter": [
+      0.523531,
+      0.444271
+    ],
+    "centerPx": [
+      1335.25,
+      637.35
+    ],
+    "irisRadii": [
+      0.006897,
+      0.009167
+    ],
+    "irisRadiiPx": [
+      17.6,
+      13.2
+    ],
+    "socketBounds": {
+      "xMin": 0.511755,
+      "yMin": 0.4375,
+      "xMax": 0.536834,
+      "yMax": 0.452778,
+      "px": [
+        1306,
+        630,
+        1370,
+        652
+      ]
+    },
+    "upperCurve": [
+      [
+        0.511755,
+        0.439931
+      ],
+      [
+        0.516458,
+        0.438333
+      ],
+      [
+        0.521944,
+        0.437847
+      ],
+      [
+        0.527429,
+        0.438194
+      ],
+      [
+        0.532132,
+        0.439236
+      ],
+      [
+        0.536834,
+        0.441319
+      ]
+    ],
+    "lowerCurve": [
+      [
+        0.511755,
+        0.443403
+      ],
+      [
+        0.516458,
+        0.448958
+      ],
+      [
+        0.521944,
+        0.452222
+      ],
+      [
+        0.527429,
+        0.451944
+      ],
+      [
+        0.532132,
+        0.449167
+      ],
+      [
+        0.536834,
+        0.444444
+      ]
+    ],
+    "specularPos": [
+      0.522139,
+      0.440278
+    ],
+    "maxShiftNormalized": [
+      0.005878,
+      0.004167
+    ],
+    "eyelidWarpWeights": {
+      "upperFollow": 0.3,
+      "lowerFollow": 0.14,
+      "blinkTravel": 0.009213
+    }
+  },
+  "gazeDefaults": {
+    "shyIdleGaze": [
+      0.0,
+      -0.85
+    ],
+    "neutralEyeContactGaze": [
+      0.0,
+      0.15
+    ],
+    "blinkIntervalSec": [
+      4.0,
+      7.0
+    ],
+    "blinkDurationMs": 150,
+    "bgPlaybackRate": 0.75
+  },
+  "bgVideo": "/live-wallpaper/bg_loop.mp4"
+}
