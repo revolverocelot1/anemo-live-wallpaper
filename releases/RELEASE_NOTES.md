@@ -1,6 +1,6 @@
-# Anemo Live Wallpaper v1.0.0
+# Anemo Live Wallpaper v1.0.2
 
-Initial public release of **Anemo Live Wallpaper** — an interactive 2.5D desktop environment and gaze-reactive wallpaper engine.
+Version **1.0.2** brings critical stability fixes for multi-monitor setups, fullscreen game transitions, and Explorer redraw resilience.
 
 ---
 
@@ -8,22 +8,21 @@ Initial public release of **Anemo Live Wallpaper** — an interactive 2.5D deskt
 
 | Package | Size | Description |
 | :--- | :--- | :--- |
-| **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/AnemoSetup.exe)** | **~126.6 MB** | **Recommended.** Single-file standalone installer. Installs to `%LocalAppData%\Programs\Anemo`, provisions Desktop & Start Menu shortcuts, and launches immediately. |
-| **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/Anemo-Live-Wallpaper-Portable.zip)** | **~126.5 MB** | **Portable Archive.** Extract to any folder and execute `Anemo.exe` directly without installation or registry writes. |
+| **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.2/AnemoSetup.exe)** | **~126.6 MB** | **Recommended.** Single-file standalone installer. Installs to `%LocalAppData%\Programs\Anemo`, provisions Desktop & Start Menu shortcuts, and launches immediately. |
+| **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.2/Anemo-Live-Wallpaper-Portable.zip)** | **~126.5 MB** | **Portable Archive.** Extract to any folder and execute `Anemo.exe` directly without installation or registry writes. |
 
 ---
 
-## Architectural Highlights
+## What's Changed in v1.0.2
 
-- **Hardware Video Acceleration:** Direct3D11 / NVDEC / QSV decoding decoupled from WebGL foreground shaders, delivering zero-copy video playback without bus bandwidth saturation.
-- **Resource Footprint:** Average runtime utilization under **26 MB JS heap** and **< 0.3% CPU**.
-- **2.5D Gaze Dynamics:**
-  - Real-time cursor gaze tracking with calibrated One-Euro 2D temporal filtering.
-  - Procedural eyelid follow dynamics across five response profiles (`Off`, `Subtle 30%`, `Natural 56%`, `Dynamic 75%`, `Maximum 100%`).
-  - Stylistic iris selections: Classic (Set 1 Default) and Focused (Set 2).
-- **Multi-Monitor Orchestration:** Target Display 1, Display 2, or replicate across all monitors. Secondary displays automatically mute duplicate audio streams.
-- **Windows Desktop Shell Hook:** Direct injection into the Windows `WorkerW` / `Progman` desktop window tree behind desktop icons.
-- **Acoustic Horizon:** Seamless ambient soundtrack derived from *don't think about it anymore* with randomized start offset.
+- **Multi-Monitor Stability:** Working on another monitor no longer triggers false desktop-covered sleep. The wallpaper runs continuously and fluidly across your display setup.
+- **Fullscreen Return & Wake Resume:** Returning to desktop after a fullscreen game or screen lock immediately resumes 60 FPS video playback and cursor tracking.
+- **Camera State Integrity:** When waking from sleep:
+  - If **Mouse mode** is active (default), the camera remains strictly closed with zero hardware sensor activation.
+  - If **Person or Gaze mode** is active, the webcam stream and MediaPipe pipeline are automatically re-acquired with reset tracking anchors.
+- **Self-Healing Desktop Watchdog:** Implemented a continuous health monitor that verifies the `WorkerW` / `Progman` hierarchy every second and restores Z-order if Windows Explorer refreshes the desktop.
+- **Win32 Window Styling:** Applied `WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN` to prevent desktop redraws from painting over the wallpaper surface.
+- **D3D11 Video Surface Preservation:** Background video element avoids evicting swapchain buffers during power transitions.
 
 ---
 

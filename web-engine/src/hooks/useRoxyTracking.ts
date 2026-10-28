@@ -356,6 +356,9 @@ export function useRoxyTracking(opts: UseRoxyTrackingOptions) {
       } else if (!streamRef.current) {
         try {
           await acquireStream();
+          setStatusIfChanged('searching');
+          lastSeenMsRef.current = performance.now();
+          filterRef.current.reset();
         } catch (e) {
           console.warn('[useRoxyTracking] resume failed', e);
         }

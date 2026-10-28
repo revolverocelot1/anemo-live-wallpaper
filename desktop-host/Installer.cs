@@ -205,7 +205,7 @@ namespace AnemoInstaller
 
             var lblSub = new Label
             {
-                Text = "Interactive Room-Scale Eye Contact Wallpaper",
+                Text = "Interactive 2.5D Living Desktop Engine — v1.0.2",
                 Font = new Font("Segoe UI", 9, FontStyle.Regular),
                 ForeColor = Color.FromArgb(156, 163, 175),
                 Location = new Point(26, 48),
