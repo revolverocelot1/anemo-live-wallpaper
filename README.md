@@ -129,4 +129,6 @@ Anemo is created with deep gratitude to the original artists whose creative work
 * **Visual Artwork:** Based on an edited artwork originally created by **[@aruhshura](https://x.com/aruhshura)**, featured in the video *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
 * **Music & Sound:** Ambient audio sourced and looped from *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
 
-All rights to the original artistic compositions and musical works belong to their respective creator. The software and shaders in this repository are distributed under the [MIT License](./LICENSE) for personal and non-commercial educational use.
+All rights to the original artistic compositions and musical works belong to their respective creator.
+
+The software is distributed under the [MIT License](./LICENSE).

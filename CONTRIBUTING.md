@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing to Anemo.
 
-Anemo is built as an open-source, non-commercial interactive desktop environment. We prioritize technical discipline, zero-copy performance, and faithful artistic adaptation.
+Anemo is built as an open-source interactive desktop environment. We prioritize technical discipline, zero-copy performance, and faithful artistic adaptation.
 
 ---
 
