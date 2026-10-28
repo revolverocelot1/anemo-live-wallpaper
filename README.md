@@ -5,7 +5,7 @@
 **A responsive, zero-compromise living wallpaper engine for Windows & Web.**  
 Features fluid hardware-accelerated video playback, dynamic 2.5D eye gaze tracking, natural eyelid deformation, multi-monitor duplicate support, and an ultra-low memory footprint.
 
-[![Release](https://img.shields.io/badge/Release-v1.0.0-blue.svg?style=flat-square)](./releases/RELEASE_NOTES.md)
+[![Release](https://img.shields.io/badge/Release-v1.0.0-blue.svg?style=flat-square)](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/tag/v1.0.0)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Web-555555.svg?style=flat-square)](#quick-start)
 [![Resolution](https://img.shields.io/badge/Resolution-2K%20Native%20(4K%20Planned)-6366f1.svg?style=flat-square)](#-resolution-roadmap-2k--4k)
 [![RAM Usage](https://img.shields.io/badge/RAM-~26MB%20Heap-success.svg?style=flat-square)](#-performance-benchmarks)
@@ -71,13 +71,13 @@ Whether you run it natively on your Windows desktop behind your desktop icons or
 
 ### 1. Windows Desktop (Recommended)
 
-1. Head to the **[Releases](./releases/RELEASE_NOTES.md)** section.
-2. Download **`AnemoSetup.exe`** (~126 MB).
+1. Head to the **[Releases](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/tag/v1.0.0)** section.
+2. Download **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/AnemoSetup.exe)** (~126 MB).
 3. Run the installer. It will:
    * Install the app to `%LocalAppData%\Programs\Anemo`.
    * Create Desktop & Start Menu shortcuts with the official logo.
    * Launch `Anemo.exe` immediately in your system tray.
-4. *(Optional)* Alternatively, download **`Anemo-Live-Wallpaper-Portable.zip`**, extract anywhere, and double-click `Anemo.exe`.
+4. *(Optional)* Alternatively, download **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/Anemo-Live-Wallpaper-Portable.zip)**, extract anywhere, and double-click `Anemo.exe`.
 
 ### 2. Run on the Web / Self-Host
 
@@ -85,7 +85,7 @@ The web engine is fully standalone and can be run locally or deployed to any sta
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/anemo-live-wallpaper.git
+git clone https://github.com/revolverocelot1/anemo-live-wallpaper.git
 cd anemo-live-wallpaper/web-engine
 
 # Install dependencies and start Vite

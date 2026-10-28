@@ -10,8 +10,8 @@ An interactive, responsive 2.5D desktop live wallpaper featuring fluid hardware-
 
 | Package | Size | Description |
 | :--- | :--- | :--- |
-| **[`AnemoSetup.exe`](https://github.com/your-username/anemo-live-wallpaper/releases/download/v1.0.0/AnemoSetup.exe)** | **~126.6 MB** | **Recommended.** Single-file installer. One click installs to `%LocalAppData%\Programs\Anemo`, adds Desktop & Start Menu shortcuts, and launches instantly. |
-| **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/your-username/anemo-live-wallpaper/releases/download/v1.0.0/Anemo-Live-Wallpaper-Portable.zip)** | **~126.5 MB** | **Portable Archive.** Extract anywhere and run `Anemo.exe` directly without installation. |
+| **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/AnemoSetup.exe)** | **~126.6 MB** | **Recommended.** Single-file installer. One click installs to `%LocalAppData%\Programs\Anemo`, adds Desktop & Start Menu shortcuts, and launches instantly. |
+| **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/Anemo-Live-Wallpaper-Portable.zip)** | **~126.5 MB** | **Portable Archive.** Extract anywhere and run `Anemo.exe` directly without installation. |
 
 ---
 
