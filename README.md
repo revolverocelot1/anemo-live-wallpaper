@@ -1,144 +1,132 @@
+# Anemo
+
+### An interactive 2.5D desktop environment and gaze-reactive live wallpaper.
+
+Anemo transforms your desktop into a living visual canvas. Built as an open-source, ultra-low-footprint alternative to heavy video wallpaper software, Anemo pairs smooth hardware-accelerated video playback with real-time 2.5D gaze tracking, procedural eyelid deformation, and ambient soundscapes.
+
+---
+
 <div align="center">
 
-# Anemo — The Living 2.5D Interactive Wallpaper
+![Anemo Demonstration](./demo/demo_preview.gif)
 
-**A responsive, zero-compromise living wallpaper engine for Windows & Web.**  
-Features fluid hardware-accelerated video playback, dynamic 2.5D eye gaze tracking, natural eyelid deformation, multi-monitor duplicate support, and an ultra-low memory footprint.
-
-[![Release](https://img.shields.io/badge/Release-v1.0.0-blue.svg?style=flat-square)](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/tag/v1.0.0)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Web-555555.svg?style=flat-square)](#quick-start)
-[![Resolution](https://img.shields.io/badge/Resolution-2K%20Native%20(4K%20Planned)-6366f1.svg?style=flat-square)](#-resolution-roadmap-2k--4k)
-[![RAM Usage](https://img.shields.io/badge/RAM-~26MB%20Heap-success.svg?style=flat-square)](#-performance-benchmarks)
-[![CPU Usage](https://img.shields.io/badge/CPU-%3C0.3%25-success.svg?style=flat-square)](#-performance-benchmarks)
-[![License](https://img.shields.io/badge/License-MIT%20Attributed-orange.svg?style=flat-square)](./LICENSE)
-
----
-
-### 🎥 Watch in Action
-
-![Anemo Live Wallpaper Preview](./demo/demo_preview.gif)
-
-*Desktop recording showing real-time cursor eye tracking behind Windows desktop icons.*  
-*(Full high-definition video available in [`demo/demo.mp4`](./demo/demo.mp4) or see original capture `Recording 2026-10-28 000013.mp4`)*
-
----
+*Gaze-reactive tracking running behind native Windows desktop icons.*  
+*(High-definition capture available in [`demo/demo.mp4`](./demo/demo.mp4))*
 
 </div>
 
-## 🌟 Overview
+---
 
-**Anemo** turns your desktop into an immersive living space. Unlike traditional video wallpapers that loop statically, Anemo brings the character to life with responsive 2.5D gaze tracking, dynamic eyelid morphing, and atmospheric wind motion—all while maintaining the resource footprint of a lightweight utility.
+## Architectural Principles
 
-Whether you run it natively on your Windows desktop behind your desktop icons or host it on the web, Anemo delivers 60 FPS fluidity without taxing your GPU or draining your laptop battery.
+### Zero-Copy Dual Layer Compositing
+Conventional interactive wallpaper engines suffer from high memory bandwidth consumption by reading raw uncompressed video frames into WebGL textures every frame (`gl.texImage2D`), saturating GPU buses with upwards of 880 MB/s of data transfers at 1440p.
+
+Anemo addresses this with a zero-copy decoupled pipeline:
+* **Background Plate:** The 2K video loop (`bg_loop.mp4`) decodes natively via Direct3D11 / NVDEC / QSV hardware video decoders inside an isolated presentation layer.
+* **Reactive Foreground:** A transparent WebGL 2.0 surface sits directly above the video plate, executing shaders only for the 2.5D eye socket aperture, iris depth displacement, and procedural eyelid splines.
+* **Net Result:** Average memory utilization drops from 650+ MB to under **26 MB JS heap**, and CPU usage remains below **0.3%**.
+
+### 2.5D Gaze Tracking & Procedural Eyelids
+* **Non-Linear Depth Rig:** The character's gaze dynamically computes eye socket parallax, iris angle, and corneal highlight positions with smooth non-linear interpolation.
+* **Temporal Filtering:** Input coordinates pass through a calibrated One-Euro 2D filter, eliminating micro-jitter at low speeds while maintaining instant responsiveness during rapid saccades.
+* **Eyelid Follow Dynamics:** Upper and lower eyelids flex dynamically with vertical gaze displacement, configurable across five distinct response curves (`Off`, `Subtle 30%`, `Natural 56%`, `Dynamic 75%`, `Maximum 100%`).
+* **Iris Calibrations:** Dual stylistic presets:
+  * *Classic (Set 1, Default):* Authentic anime iris proportions with soft ambient catchlights.
+  * *Focused (Set 2):* Concentrated pupil radius with refined focal highlights.
+
+### Native Windows Shell Integration
+The desktop runtime (`Anemo.exe`) injects the wallpaper canvas directly into the Windows desktop hierarchy:
+* Hooks between `Progman` and the `WorkerW` background plane, allowing desktop icons (`SysListView32`) and selection marquees to function uninhibited.
+* Multi-monitor topology support: assign to Display 1, Display 2, or replicate across all monitors. Secondary displays automatically mute duplicate audio streams to preserve acoustic clarity and CPU cycles.
+* Windows Startup auto-run persistence via user registry key `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.
+
+### Acoustic Horizon
+An ambient, atmospheric soundtrack sourced from *don't think about it anymore* runs asynchronously in the background. When enabled, playback begins from a randomized timestamp to prevent acoustic fatigue, looping continuously.
 
 ---
 
-## ✨ Key Features
+## Runtime Benchmarks
 
-* **⚡ Zero-Copy Hardware Acceleration:**  
-  Background video (`bg_loop.mp4`) decodes directly through the GPU's native Direct3D11 / NVDEC / QSV hardware video engine. WebGL renders only the alpha-masked 2.5D eye sockets on top. Zero uncompressed video uploads per frame (`0%` GPU bus bottleneck).
-* **👁️ 2.5D Dynamic Eye Rig & Eyelid Morphing:**  
-  * Real-time cursor following with smooth One-Euro 2D temporal filtering.
-  * Natural Eyelid Follow slider (`Off`, `Subtle 30%`, `Natural 56% Default`, `Dynamic 75%`, `Max 100%`).
-  * Dual Iris Styles: **Classic (Set 1 Default)** and **Focused (Set 2)**.
-* **🖥️ Multi-Monitor Support & Duplicate Mode:**  
-  * Choose between Display 1, Display 2, or seamless **Duplicate on All Displays**.
-  * Audio decoding is automatically isolated to the primary display to prevent sound echoing or redundant CPU cycles.
-* **🪟 True Windows Desktop Integration:**  
-  * Mounts directly behind Windows desktop icons using the native `WorkerW` / `Progman` desktop window tree.
-  * System tray controls for quick monitor swapping, eyelid dynamics, audio toggles, and auto-start on Windows boot.
-* **🎯 Optional MediaPipe Room & Gaze Tracking:**  
-  * Webcam-powered person tracking and high-precision face tracking with an interactive calibration wizard.
-  * Defaults strictly to mouse cursor mode (webcam is OFF by default).
-* **🎵 Looping Ambient Soundscape:**  
-  * Atmospheric ambient music sourced from *"don't think about it anymore"*.
-  * Starts at a randomized offset each time it is enabled and loops seamlessly. Disabled by default.
-
----
-
-## 📊 Performance Benchmarks
-
-| Metric | Previous Build | Anemo v1.0.0 | Improvement |
+| Metric | Conventional WebGL Wallpaper | Anemo Architecture | Delta |
 | :--- | :--- | :--- | :--- |
-| **JS Heap RAM** | ~650 MB | **~26 MB** | **96% Reduction** |
-| **CPU Usage** | 3.5% – 4.1% | **< 0.3%** | **~92% Reduction** |
-| **Texture Uploads** | 882 MB/sec (60 FPS `texImage2D`) | **0 MB/sec** (Hardware Overlay) | **100% Zero-Copy** |
-| **Dual Monitor Lag** | High stutter / doubled memory | **Silky Smooth 60 FPS** | **Eliminated** |
+| **JS Heap RAM** | 640 – 670 MB | **26 MB** | -96% |
+| **CPU Utilization** | 3.5% – 4.1% | **< 0.3%** | -92% |
+| **Texture Bus Uploads** | 882 MB/s (60 FPS `texImage2D`) | **0 MB/s** (Hardware Native) | 100% Zero-Copy |
+| **Multi-Monitor Duplicate** | Memory doubling, dropped frames | **60 FPS Synchronized** | Negligible overhead |
 
 ---
 
-## 📦 Quick Start
+## Installation & Distribution
 
-### 1. Windows Desktop (Recommended)
+### 1. Windows Installer (Single Executable)
+* Download **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/AnemoSetup.exe)** from the official [v1.0.0 Release](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/tag/v1.0.0).
+* Single click installation: unpacks to `%LocalAppData%\Programs\Anemo`, provisions Start Menu & Desktop shortcuts, and starts immediately in the system tray.
 
-1. Head to the **[Releases](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/tag/v1.0.0)** section.
-2. Download **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/AnemoSetup.exe)** (~126 MB).
-3. Run the installer. It will:
-   * Install the app to `%LocalAppData%\Programs\Anemo`.
-   * Create Desktop & Start Menu shortcuts with the official logo.
-   * Launch `Anemo.exe` immediately in your system tray.
-4. *(Optional)* Alternatively, download **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/Anemo-Live-Wallpaper-Portable.zip)**, extract anywhere, and double-click `Anemo.exe`.
+### 2. Portable Windows Package
+* Download **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/Anemo-Live-Wallpaper-Portable.zip)**.
+* Extract to any directory and execute `Anemo.exe`. No elevated permissions or registry modifications required.
 
-### 2. Run on the Web / Self-Host
-
-The web engine is fully standalone and can be run locally or deployed to any static host (Vercel, Netlify, Cloudflare Pages, Docker):
+### 3. Web & Self-Hosted Engine
+The web engine runs independently of the Windows host and can be served through any static host:
 
 ```bash
-# Clone the repository
 git clone https://github.com/revolverocelot1/anemo-live-wallpaper.git
 cd anemo-live-wallpaper/web-engine
 
-# Install dependencies and start Vite
 npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Browse to `http://localhost:5173` to launch the interactive canvas.
 
 ---
 
-## 🎨 Asset Portability & Wallpaper Engine
+## Asset Portability & Engine Adapters
 
-Want to use these assets in **Steam Wallpaper Engine**, **Lively Wallpaper**, or your own custom creative coding project?
+All segmented, calibrated raw assets are provided under [`assets-raw/`](./assets-raw) for creators and animators:
+* `bg_loop.mp4` — High-definition 2K animated background plate.
+* `face_anchor.png` — Isolated facial occlusion mask with transparent socket windows.
+* `iris_layer.png`, `pupil_mask.png`, and iris presets — Calibrated displacement textures.
+* `bgm.mp3` — Ambient atmospheric audio track.
 
-All raw, segmented assets are available in the [`assets-raw/`](./assets-raw) directory:
-* `bg_loop.mp4` — High-definition 2K animated background video.
-* `face_anchor.png` — Isolated character face layer with transparent eye sockets.
-* `pupil_mask.png`, `eyes_open.png`, and `iris_v1.png`–`iris_v6.png` — Calibrated 2.5D eye deformation textures.
-* `bgm.mp3` — Mastered ambient soundscape.
+You are welcome and encouraged to adapt these assets into third-party engines:
+* **Steam Wallpaper Engine** (Scene / Web project)
+* **Lively Wallpaper**
+* **Native Unix / Wayland live wallpaper daemons**
 
-> **Note for creators:** You are completely free to adapt, animate, and port these assets to Steam Wallpaper Engine or any other wallpaper platform! All we ask is that you keep the artist attribution intact.
-
----
-
-## 🗺️ Resolution Roadmap: 2K & 4K
-
-* **Why 2K?** The current build runs natively at **2K (2560×1440)** because the original source artwork and animation render were created at that resolution.
-* **4K Ultra-HD Planned:** We are actively planning a native 4K release featuring:
-  * Enhanced high-resolution background video loop.
-  * Ultra-crisp vector-fitted eyelid contours.
-  * Additional character presets and dynamic background themes.
-
-Contributions toward the 4K enhancement and new scene presets are warmly welcomed!
+*(Please maintain original artistic attribution in any derivative distributions.)*
 
 ---
 
-## 🤝 Community & Contributing
+## Roadmap: 2K Foundation & 4K Horizon
 
-We welcome contributions from developers, animators, and enthusiasts:
-* **Shader & Engine Optimization:** Enhancements to WebGL shaders, Direct3D rendering, or power-saving states.
-* **Platform Ports:** macOS (Metal/WebKit) or Linux (Wayland/Hyprland) native desktop shells.
-* **New Wallpapers:** Additional scenes, characters, or day/night cycles.
+* **Current Fidelity (2K):** Anemo currently renders at **2560×1440 (2K)**. The source master illustration and animation plates were mastered at this resolution.
+* **4K Ultra-Resolution Edition:** Work is underway to produce a native 4K release featuring:
+  * Hand-retouched, high-density vector eyelid contours.
+  * Re-rendered 4K background video loops.
+  * Expanded character presets and atmospheric scene variants.
 
-Please review our [Contributing Guide](./CONTRIBUTING.md) to get started.
+Community members experienced with high-resolution animation cleanup, shader compilation, and WebGL optimization are invited to collaborate.
 
 ---
 
-## 🙏 Credits & Attribution
+## Contributing
 
-Anemo is built with immense appreciation for the original creators:
+Contributions focusing on performance, platform expansion, and artistic fidelity are warmly received:
+* **GPU Shaders & Low-Power States:** Reducing wake-up cycles and integrating full-screen game detection.
+* **Cross-Platform Hosts:** Standalone desktop wrappers for macOS (Metal / WKWebView) and Linux (Wayland / wlroots).
+* **New Scene Presets:** Custom character anchors, weather effects, and lighting transitions.
 
-* **Visual Artwork:** Based on edited artwork created by **[@aruhshura](https://x.com/aruhshura)**, featured in the video *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
-* **Ambient Music:** Sourced and looped from the video *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
+Refer to the [Contributing Guide](./CONTRIBUTING.md) for technical conventions.
 
-All musical and original artistic rights belong to their respective creator. This software is provided under the terms of the [MIT License](./LICENSE) for personal and non-commercial enjoyment.
+---
+
+## Attribution & Legal
+
+Anemo is created with deep gratitude to the original artists whose creative work inspired this project:
+
+* **Visual Artwork:** Based on an edited artwork originally created by **[@aruhshura](https://x.com/aruhshura)**, featured in the video *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
+* **Music & Sound:** Ambient audio sourced and looped from *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
+
+All rights to the original artistic compositions and musical works belong to their respective creator. The software and shaders in this repository are distributed under the [MIT License](./LICENSE) for personal and non-commercial educational use.

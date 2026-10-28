@@ -1,76 +1,75 @@
 # Contributing to Anemo
 
-First off, thank you for your interest in making **Anemo** even better! 
+Thank you for your interest in contributing to Anemo.
 
-Anemo is built by and for the open-source community as an interactive, zero-compromise desktop wallpaper experience. We strive for high craft, clean code, and zero AI-slop design.
-
----
-
-## 🌟 High-Priority Areas for Contribution
-
-### 1. Performance & Shader Optimizations
-* **Zero-Copy & Memory Footprint:** We got the JS heap down to ~26 MB and CPU usage below 0.3%. If you know techniques in WebGL, Direct3D11, or V8 memory tuning to shave off even more cycles or reduce GPU draw calls, we want your PRs!
-* **Window Inactivity & Sleep States:** Enhancing pause detection when a full-screen game or heavy application takes focus on Windows.
-
-### 2. Resolution Roadmap: 4K & Beyond
-* **Current Resolution:** Anemo currently runs at **2K (2560×1440)** because the original source artwork and animation render were produced at that fidelity.
-* **4K Native Version:** We are actively planning a native 4K release with re-rendered video loops, high-definition vector eyelid splines, and ultra-crisp pupil masks. If you are skilled in clean video enhancement, texture rigging, or digital cleanup, your contributions here are immense.
-
-### 3. Ports for Other Wallpaper Engines
-* We have provided the full raw segmented asset pipeline in [`assets-raw/`](./assets-raw):
-  * `bg_loop.mp4` (hardware video loop)
-  * `face_anchor.png` (alpha-masked 2.5D anchor)
-  * `pupil_mask.png`, `eyes_open.png`, and iris presets
-  * `bgm.mp3` (ambient atmospheric audio)
-* **You are 100% encouraged to adapt these assets and create ports for:**
-  * **Steam Wallpaper Engine** (Scene / Web / Video project)
-  * **Lively Wallpaper**
-  * **macOS Desktop** (e.g. via Swift / Metal or WebKit host)
-  * **Linux (Wayland / Hyprland / KDE / X11)** live wallpaper daemons
-* *Please ensure you maintain the artist and music attribution (see Attribution below) in any published port.*
-
-### 4. New Wallpapers & Character Presets
-* Help us expand Anemo from a single character into an expandable live wallpaper engine with selectable scenes, day/night cycles, and customizable eye rigs.
+Anemo is built as an open-source, non-commercial interactive desktop environment. We prioritize technical discipline, zero-copy performance, and faithful artistic adaptation.
 
 ---
 
-## 🛠️ Local Development Setup
+## Technical Focus Areas
 
-### Web Engine (TypeScript + React + Vite)
+### 1. Rendering Architecture & Memory Efficiency
+* **GPU Memory & Texture Staging:** We maintain a sub-30 MB heap and sub-0.3% CPU target on Windows. Shader optimizations, uniform upload batching, and WebGL state reductions are highly prioritized.
+* **Display Sleep & Inactivity Detection:** Extending Windows hook behaviors to detect full-screen exclusive 3D workloads (e.g. video games) to suspend the render loop to 0% GPU utilization automatically.
+
+### 2. High-Resolution 4K Pipeline
+* **Master Fidelity:** Anemo is currently mastered at **2K (2560×1440)** due to the resolution of the original asset render.
+* **4K Development:** We are actively preparing a native 4K release. Key needs:
+  * Re-rendering clean 3840×2160 background loop segments.
+  * Sub-pixel vector spline definition for upper and lower eyelid occlusion masks.
+  * High-resolution iris and sclera depth layers.
+
+### 3. Community Engine Ports
+All segmented assets are cleanly structured in [`assets-raw/`](./assets-raw) to facilitate porting:
+* **Steam Wallpaper Engine:** Web/Scene project ports utilizing the decoupled `<video>` and transparent WebGL architecture.
+* **Lively Wallpaper:** Lightweight native integration.
+* **Unix / Wayland Daemons:** Standalone desktop hooks for Linux (wlroots / Hyprland / KDE).
+
+*(Please ensure that any derivative port prominently preserves original artistic and musical credits.)*
+
+### 4. New Scenes & Rig Customization
+* Expanding the core engine beyond a single scene into an extensible system with customizable anchor points, lighting models, and time-of-day transitions.
+
+---
+
+## Local Development Workflow
+
+### Web Engine (TypeScript, React 18, Vite 5)
 ```bash
 cd web-engine
 npm install
 npm run dev
 ```
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Open `http://localhost:5173` in your browser.
 
-To verify production builds:
+To verify production bundle compilation and type safety:
 ```bash
 npm run build
 ```
 
-### Desktop Windows Host (C# + WebView2)
-The desktop host hooks directly behind desktop icons using the Windows `WorkerW` / `Progman` hierarchy:
+### Windows Desktop Host (C#, WebView2)
+The desktop host hooks directly behind desktop icons through the Windows `Progman` / `WorkerW` hierarchy:
 ```powershell
 cd desktop-host
 powershell -ExecutionPolicy Bypass -File build.ps1
 ```
-This builds `Anemo.exe` and packages `AnemoSetup.exe`.
+This builds `Anemo.exe` and bundles the single-executable installer `AnemoSetup.exe`.
 
 ---
 
-## 🎨 Attribution & Respect for Creators
-Anemo exists thanks to the original creative works:
-- **Visual Art:** Edited artwork of **[@aruhshura](https://x.com/aruhshura)** from the video *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
-- **Audio:** Music sourced and looped from *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
+## Artistic Attribution & Ethical Standards
 
-All contributions must preserve full attribution to the original creator.
+Anemo exists through the creative work of its original authors:
+* **Artwork:** Based on edited artwork created by **[@aruhshura](https://x.com/aruhshura)** from the video *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
+* **Music:** Soundtrack sourced and looped from *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
+
+All contributions must respect and preserve attribution to the original creators.
 
 ---
 
-## 🚀 Submitting Changes
+## Submission Process
+
 1. Fork the repository.
-2. Create your feature branch (`git checkout -b feature/awesome-optimization`).
-3. Commit your changes (`git commit -m 'Optimize WebGL uniform uploads'`).
-4. Push to the branch (`git push origin feature/awesome-optimization`).
-5. Open a Pull Request with a clear description and benchmark/screenshot if applicable.
+2. Create a focused branch (`git checkout -b perf/shader-batching`).
+3. Maintain code formatting and ensure `npm run build` passes with zero errors.
+4. Submit a Pull Request documenting the design rationale and performance measurements.

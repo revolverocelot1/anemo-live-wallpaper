@@ -1,35 +1,32 @@
-# Anemo Live Wallpaper v1.0.0 — Initial Release
+# Anemo Live Wallpaper v1.0.0
 
-Welcome to the initial release of **Anemo Live Wallpaper**!
-
-An interactive, responsive 2.5D desktop live wallpaper featuring fluid hardware-accelerated background motion, natural 2.5D eye gaze and eyelid tracking, and multi-monitor support.
+Initial public release of **Anemo Live Wallpaper** — an interactive 2.5D desktop environment and gaze-reactive wallpaper engine.
 
 ---
 
-## 📦 Downloads
+## Downloads
 
 | Package | Size | Description |
 | :--- | :--- | :--- |
-| **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/AnemoSetup.exe)** | **~126.6 MB** | **Recommended.** Single-file installer. One click installs to `%LocalAppData%\Programs\Anemo`, adds Desktop & Start Menu shortcuts, and launches instantly. |
-| **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/Anemo-Live-Wallpaper-Portable.zip)** | **~126.5 MB** | **Portable Archive.** Extract anywhere and run `Anemo.exe` directly without installation. |
+| **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/AnemoSetup.exe)** | **~126.6 MB** | **Recommended.** Single-file standalone installer. Installs to `%LocalAppData%\Programs\Anemo`, provisions Desktop & Start Menu shortcuts, and launches immediately. |
+| **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.0/Anemo-Live-Wallpaper-Portable.zip)** | **~126.5 MB** | **Portable Archive.** Extract to any folder and execute `Anemo.exe` directly without installation or registry writes. |
 
 ---
 
-## ✨ Features in this Release
+## Architectural Highlights
 
-- **Fluid Hardware Video Acceleration:** Direct3D11 / NVDEC / QSV decoding behind a transparent WebGL canvas. Zero-copy texture streaming with 0% video stutter.
-- **Ultra-Low Resource Footprint:** Under **0.3% CPU** and **~26 MB JS Heap RAM** on average.
-- **2.5D Dynamic Eye Rig & Eyelid Dynamics:**
-  - Real-time cursor gaze tracking with smooth One-Euro 2D temporal filtering.
-  - Multi-level Eyelid Follow slider (`Off`, `Subtle 30%`, `Natural 56% Default`, `Dynamic 75%`, `Max 100%`).
-  - Dual Iris Styles: Classic (Set 1 Default) and Focused (Set 2).
-- **Multi-Monitor Duplicate & Selection:** Run on Display 1, Display 2, or duplicated seamlessly across all monitors with automatic audio isolation on secondary displays.
-- **Optional MediaPipe Webcam Tracking:** Person room tracking & high-precision face tracking with automatic calibration wizard.
-- **Windows System Tray & Boot Integration:** Toggle auto-start on Windows startup, change monitors, switch eyelid dynamics, and control volume from the tray icon.
-- **Ambient Looping Soundtrack:** Sourced from *"don't think about it anymore"* with randomized entry point. Off by default.
+- **Hardware Video Acceleration:** Direct3D11 / NVDEC / QSV decoding decoupled from WebGL foreground shaders, delivering zero-copy video playback without bus bandwidth saturation.
+- **Resource Footprint:** Average runtime utilization under **26 MB JS heap** and **< 0.3% CPU**.
+- **2.5D Gaze Dynamics:**
+  - Real-time cursor gaze tracking with calibrated One-Euro 2D temporal filtering.
+  - Procedural eyelid follow dynamics across five response profiles (`Off`, `Subtle 30%`, `Natural 56%`, `Dynamic 75%`, `Maximum 100%`).
+  - Stylistic iris selections: Classic (Set 1 Default) and Focused (Set 2).
+- **Multi-Monitor Orchestration:** Target Display 1, Display 2, or replicate across all monitors. Secondary displays automatically mute duplicate audio streams.
+- **Windows Desktop Shell Hook:** Direct injection into the Windows `WorkerW` / `Progman` desktop window tree behind desktop icons.
+- **Acoustic Horizon:** Seamless ambient soundtrack derived from *don't think about it anymore* with randomized start offset.
 
 ---
 
-## 🎨 Attribution
-- **Visual Artwork:** Edited artwork of **[@aruhshura](https://x.com/aruhshura)** from *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
-- **Ambient Music:** Sourced and looped from *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
+## Attribution
+- **Visual Artwork:** Edited artwork originally created by **[@aruhshura](https://x.com/aruhshura)**, featured in the video *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
+- **Music & Sound:** Sourced and looped from *["don't think about it anymore"](https://www.youtube.com/watch?v=A09aumNef-c)*.
