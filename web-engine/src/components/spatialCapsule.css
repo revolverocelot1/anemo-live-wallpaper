@@ -25,7 +25,7 @@
   position: relative;
   pointer-events: auto;
   overflow: hidden;
-  width: 428px;
+  width: 520px;
   max-width: calc(100vw - 32px);
   height: 56px;
   border-radius: 9999px;
@@ -49,7 +49,7 @@
 }
 
 .vcap--expanded {
-  width: 460px;
+  width: 520px;
   border-radius: 34px;
 }
 
@@ -364,6 +364,50 @@
   cursor: pointer;
   transition: background 0.25s ease, transform 0.35s var(--spring);
 }
+
+/* Subtle return to main website button */
+.vcap-home-btn {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  padding: 0 11px;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0.5px 0.5px rgba(255, 255, 255, 0.2);
+}
+.vcap-home-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 0.5px 0.5px rgba(255, 255, 255, 0.35), 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.vcap-home-btn:active {
+  transform: scale(0.94);
+}
+.vcap-home-btn .vcap-home-arrow {
+  transition: transform 0.25s var(--spring);
+  opacity: 0.85;
+}
+.vcap-home-btn:hover .vcap-home-arrow {
+  transform: translateX(-2.5px);
+  opacity: 1;
+}
+
+@media (max-width: 540px) {
+  .vcap {
+    width: calc(100vw - 24px);
+  }
+  .vcap-home-btn span {
+    display: none;
+  }
+  .vcap-home-btn {
+    padding: 0 9px;
+  }
+}
+
 .vcap-icon-btn:hover {
   background: rgba(255, 255, 255, 0.16);
 }

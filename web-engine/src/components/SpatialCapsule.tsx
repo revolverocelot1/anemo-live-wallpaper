@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Camera, CameraOff, Crosshair, Eye, Maximize2, Minimize2, SlidersHorizontal, Users } from 'lucide-react';
+import { ArrowLeft, Camera, CameraOff, Crosshair, Eye, Maximize2, Minimize2, SlidersHorizontal, Users } from 'lucide-react';
 import './spatialCapsule.css';
 import type { RoxyTrackMode, RoxyTrackStatus } from '../hooks/useRoxyTracking';
 
@@ -47,6 +47,8 @@ const GlassSlider: React.FC<SliderProps> = ({ label, value, min, max, step, disp
 export interface SpatialCapsuleProps {
   /** Calibration (or any full-screen takeover) is active: hide EVERYTHING. */
   hidden: boolean;
+  homeUrl?: string;
+  homeLabel?: string;
   trackMode: RoxyTrackMode;
   onTrackMode: (m: RoxyTrackMode) => void;
   webcamActive: boolean;
@@ -321,6 +323,17 @@ export const SpatialCapsule: React.FC<SpatialCapsuleProps> = (p) => {
 
           {/* Compact pill row */}
           <div className="vcap-row">
+            <a
+              href={p.homeUrl ?? 'https://anemoias.me'}
+              className="vcap-icon-btn vcap-home-btn"
+              title="Return to Anemoia"
+              aria-label="Return to Anemoia"
+              data-testid="return-home-btn"
+            >
+              <ArrowLeft size={14} className="vcap-home-arrow" />
+              <span>{p.homeLabel ?? 'Anemoia'}</span>
+            </a>
+            <div className="vcap-divider" />
             <div className="vseg" data-active={p.trackMode === 'gaze' ? '1' : '0'} role="group" aria-label="Tracking mode">
               <div className="vseg-indicator" />
               <button
