@@ -3,16 +3,70 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Anemo — Living 2.5D Interactive Wallpaper</title>
     <style>
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      html, body, #root {
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html, body {
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        overflow: hidden;
+        background-color: #000000;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+      #root {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background-color: #000000;
+      }
+      /* Core viewport & layout primitives (ensures proper rendering without Tailwind compiler) */
+      .w-full { width: 100%; }
+      .h-full { height: 100%; }
+      .w-screen { width: 100vw; }
+      .h-screen { height: 100vh; }
+      .relative { position: relative; }
+      .absolute { position: absolute; }
+      .fixed { position: fixed; }
+      .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+      .top-0 { top: 0; }
+      .left-0 { left: 0; }
+      .block { display: block; }
+      .hidden { display: none; }
+      .flex { display: flex; }
+      .flex-col { flex-direction: column; }
+      .items-center { align-items: center; }
+      .justify-center { justify-content: center; }
+      .overflow-hidden { overflow: hidden; }
+      .pointer-events-none { pointer-events: none; }
+      .pointer-events-auto { pointer-events: auto; }
+      .select-none { user-select: none; -webkit-user-select: none; }
+      .bg-black { background-color: #000000; }
+      .z-20 { z-index: 20; }
+      .z-30 { z-index: 30; }
+
+      /* Wallpaper Video & Eye Rig Canvas must strictly fill the viewport and lock 1:1 */
+      .wallpaper-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
-        overflow: hidden;
-        background-color: #050608;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        display: block;
+        pointer-events: none;
       }
     </style>
   </head>

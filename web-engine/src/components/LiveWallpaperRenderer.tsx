@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 export interface EyeSocketConfig {
   center: [number, number];
@@ -414,10 +414,28 @@ export const LiveWallpaperRenderer: React.FC<LiveWallpaperRendererProps> = ({
   irisStyle = 'classic',
   onStatusUpdate,
 }) => {
+  const isDesktopHost = useMemo(
+    () => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('desktop') === '1',
+    []
+  );
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [assetsLoaded, setAssetsLoaded] = useState(false);
+  const [introDone, setIntroDone] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (assetsLoaded) {
+      const timer = setTimeout(() => setIntroDone(true), 750);
+      return () => clearTimeout(timer);
+    }
+  }, [assetsLoaded]);
+
+  useEffect(() => {
+    // Safety fallback: ensure intro unmounts after 2s no matter what
+    const timer = setTimeout(() => setIntroDone(true), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const windIntensityRef = useRef(windIntensity);
   windIntensityRef.current = windIntensity;
@@ -788,7 +806,17 @@ export const LiveWallpaperRenderer: React.FC<LiveWallpaperRendererProps> = ({
   }, [rigConfig, gazeTargetRef]);
 
   return (
-    <div className="relative w-full h-full bg-black overflow-hidden select-none">
+    <div
+      className="relative w-full h-full bg-black overflow-hidden select-none"
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+        backgroundColor: '#000000',
+        userSelect: 'none',
+      }}
+    >
       {/* Hardware-accelerated background video layer (D3D11 / NVDEC / QSV) */}
       <video
         ref={videoRef}
@@ -798,9 +826,16 @@ export const LiveWallpaperRenderer: React.FC<LiveWallpaperRendererProps> = ({
         muted
         playsInline
         autoPlay
-        className="absolute inset-0 w-full h-full block pointer-events-none"
+        className="wallpaper-layer absolute inset-0 w-full h-full block pointer-events-none"
         style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
           objectFit: fitMode === 'contain' ? 'contain' : 'cover',
+          display: 'block',
+          pointerEvents: 'none',
         }}
       />
 
@@ -808,37 +843,58 @@ export const LiveWallpaperRenderer: React.FC<LiveWallpaperRendererProps> = ({
       <canvas
         ref={canvasRef}
         data-testid="live-wallpaper-canvas"
-        className="absolute inset-0 w-full h-full block pointer-events-none"
+        className="wallpaper-layer absolute inset-0 w-full h-full block pointer-events-none"
         style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
           objectFit: fitMode === 'contain' ? 'contain' : 'cover',
+          display: 'block',
+          pointerEvents: 'none',
         }}
       />
 
-      {/* Cinematic Artistic Intro Transition */}
-      <div
-        className={`absolute inset-0 flex flex-col items-center justify-center bg-[#07090e] z-30 transition-all duration-700 pointer-events-none ${
-          assetsLoaded ? 'opacity-0 scale-105' : 'opacity-100 scale-100'
-        }`}
-        style={{
-          transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-        }}
-      >
-        <div className="flex flex-col items-center select-none">
-          <div className="relative mb-4 flex items-center justify-center">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500/20 via-blue-500/20 to-purple-500/20 border border-white/10 backdrop-blur-md flex items-center justify-center shadow-[0_0_30px_rgba(56,189,248,0.15)]">
-              <span className="text-xl font-bold tracking-widest text-white/90 font-mono">A</span>
+      {/* Cinematic Artistic Intro Transition (Web viewer only, NEVER in desktop wallpaper host) */}
+      {!isDesktopHost && !introDone && (
+        <div
+          className={`absolute inset-0 flex flex-col items-center justify-center bg-[#07090e] z-30 transition-all duration-700 pointer-events-none ${
+            assetsLoaded ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'
+          }`}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            display: assetsLoaded ? 'none' : 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#07090e',
+            zIndex: 30,
+            pointerEvents: 'none',
+            transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        >
+          <div className="flex flex-col items-center select-none">
+            <div className="relative mb-4 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500/20 via-blue-500/20 to-purple-500/20 border border-white/10 backdrop-blur-md flex items-center justify-center shadow-[0_0_30px_rgba(56,189,248,0.15)]">
+                <span className="text-xl font-bold tracking-widest text-white/90 font-mono">A</span>
+              </div>
+              <div className="absolute inset-0 rounded-2xl border border-cyan-400/30 animate-pulse" />
             </div>
-            <div className="absolute inset-0 rounded-2xl border border-cyan-400/30 animate-pulse" />
+            <span className="text-white text-lg tracking-[0.35em] font-light uppercase font-['Space_Grotesk',sans-serif]">
+              ANEMO
+            </span>
+            <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent mt-2 mb-2" />
+            <span className="text-[10px] tracking-[0.25em] text-white/40 uppercase font-mono">
+              LIVE WALLPAPER
+            </span>
           </div>
-          <span className="text-white text-lg tracking-[0.35em] font-light uppercase font-['Space_Grotesk',sans-serif]">
-            ANEMO
-          </span>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent mt-2 mb-2" />
-          <span className="text-[10px] tracking-[0.25em] text-white/40 uppercase font-mono">
-            LIVE WALLPAPER
-          </span>
         </div>
-      </div>
+      )}
 
       {loadError && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 text-red-400 p-6 z-20">

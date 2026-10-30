@@ -124,18 +124,24 @@ namespace AnemoWallpaper
             SendMessageTimeout(progman, 0x052C, new IntPtr(0xD), new IntPtr(1), 0, 1000, out res);
             SendMessageTimeout(progman, 0x052C, new IntPtr(0xD), new IntPtr(0), 0, 1000, out res);
 
-            IntPtr workerw = IntPtr.Zero;
+            // 1. On Windows 11 (23H2 / 24H2), WorkerW is created directly as a child of Progman:
+            IntPtr workerw = FindWindowEx(progman, IntPtr.Zero, "WorkerW", null);
             IntPtr defView = IntPtr.Zero;
-            EnumWindows((top, lp) =>
+
+            // 2. If not a child of Progman, search top-level WorkerW windows (Windows 10 / classic):
+            if (workerw == IntPtr.Zero)
             {
-                IntPtr dv = FindWindowEx(top, IntPtr.Zero, "SHELLDLL_DefView", null);
-                if (dv != IntPtr.Zero)
+                EnumWindows((top, lp) =>
                 {
-                    defView = dv;
-                    workerw = FindWindowEx(IntPtr.Zero, top, "WorkerW", null);
-                }
-                return true;
-            }, IntPtr.Zero);
+                    IntPtr dv = FindWindowEx(top, IntPtr.Zero, "SHELLDLL_DefView", null);
+                    if (dv != IntPtr.Zero)
+                    {
+                        defView = dv;
+                        workerw = FindWindowEx(IntPtr.Zero, top, "WorkerW", null);
+                    }
+                    return true;
+                }, IntPtr.Zero);
+            }
 
             bool modern = false;
             IntPtr targetParent = workerw;
@@ -230,7 +236,7 @@ namespace AnemoWallpaper
         {
             if (_windowed || !IsHandleCreated) return;
             IntPtr parent = Native.GetParent(Handle);
-            if (parent == IntPtr.Zero || !Native.IsWindow(parent) || !Native.IsWindowVisible(Handle))
+            if (parent == IntPtr.Zero || !Native.IsWindow(parent))
             {
                 Native.AttachToDesktop(Handle, _bounds);
             }

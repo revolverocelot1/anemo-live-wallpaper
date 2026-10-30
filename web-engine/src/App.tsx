@@ -416,10 +416,38 @@ const App: React.FC = () => {
       className="fixed top-0 left-0 w-screen h-screen bg-black overflow-hidden select-none z-20"
       data-testid="live-wallpaper-page"
       data-calibrating={isCalibrationOpen ? 'true' : 'false'}
-      style={{ cursor: isDesktopHost ? 'none' : undefined }}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+        backgroundColor: '#000000',
+        userSelect: 'none',
+        zIndex: 20,
+        cursor: isDesktopHost ? 'none' : undefined,
+      }}
     >
-      {/* Hidden webcam feed for MediaPipe */}
-      <video ref={tracking.videoRef} playsInline muted className="hidden" width={640} height={480} />
+      {/* Hidden webcam feed for MediaPipe - strictly offscreen & invisible */}
+      <video
+        ref={tracking.videoRef}
+        playsInline
+        muted
+        className="hidden"
+        width={1}
+        height={1}
+        style={{
+          display: 'none',
+          position: 'fixed',
+          top: '-9999px',
+          left: '-9999px',
+          width: '1px',
+          height: '1px',
+          opacity: 0,
+          pointerEvents: 'none',
+        }}
+      />
 
       <LiveWallpaperRenderer
         rigConfig={rigConfig}

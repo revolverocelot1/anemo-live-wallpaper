@@ -60,11 +60,11 @@ An ambient, atmospheric soundtrack sourced from *don't think about it anymore* r
 ## Installation & Distribution
 
 ### 1. Windows Installer (Single Executable)
-* Download **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.2/AnemoSetup.exe)** from the official [v1.0.2 Release](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/tag/v1.0.2).
+* Download **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.3/AnemoSetup.exe)** from the official [v1.0.3 Release](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/tag/v1.0.3).
 * Single click installation: unpacks to `%LocalAppData%\Programs\Anemo`, provisions Start Menu & Desktop shortcuts, and starts immediately in the system tray.
 
 ### 2. Portable Windows Package
-* Download **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.2/Anemo-Live-Wallpaper-Portable.zip)**.
+* Download **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.3/Anemo-Live-Wallpaper-Portable.zip)**.
 * Extract to any directory and execute `Anemo.exe`. No elevated permissions or registry modifications required.
 
 ### 3. Web & Self-Hosted Engine

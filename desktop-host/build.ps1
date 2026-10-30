@@ -48,19 +48,20 @@ $wf   = Join-Path $sdk 'lib\net462\Microsoft.Web.WebView2.WinForms.dll'
 $ldr  = Join-Path $sdk 'runtimes\win-x64\native\WebView2Loader.dll'
 Write-Host "[2/7] WebView2 SDK ready." -ForegroundColor Green
 
-# 3) Ensure web assets are built in dist/
-$dist = Join-Path $root 'dist'
+# 3) Ensure web assets are built in web-engine/dist/
+$webDir = Join-Path $root 'web-engine'
+$dist = Join-Path $webDir 'dist'
 if ((-not $SkipWeb) -or (-not (Test-Path $dist))) {
-    Write-Host "[3/7] Building production web assets (Vite)..." -ForegroundColor Yellow
-    Push-Location $root
+    Write-Host "[3/7] Building production web assets (Vite in web-engine)..." -ForegroundColor Yellow
+    Push-Location $webDir
     try {
-        npx vite build
+        npm run build
         if ($LASTEXITCODE -ne 0) { throw 'Vite build failed' }
     } finally {
         Pop-Location
     }
 }
-Write-Host "[3/7] Web build verified in dist/" -ForegroundColor Green
+Write-Host "[3/7] Web build verified in web-engine/dist/" -ForegroundColor Green
 
 # 4) Prepare clean output directory
 New-Item -ItemType Directory -Force $anemoDir | Out-Null
@@ -87,7 +88,7 @@ New-Item -ItemType Directory -Force $appDir | Out-Null
 
 # Copy essential root web files
 Get-ChildItem $dist -File | Where-Object {
-    $_.Name -in @('index.html', 'A_logo.png', 'favicon.png', 'manifest.json', 'robots.txt')
+    $_.Name -in @('index.html', 'A_logo.png', 'favicon.png', 'favicon.ico', 'manifest.json', 'robots.txt')
 } | Copy-Item -Destination $appDir -Force
 
 # Copy live-wallpaper textures
