@@ -104,6 +104,7 @@ namespace AnemoInstaller
 
             string targetExe = Path.Combine(targetDir, "Anemo.exe");
             string icoPath = Path.Combine(targetDir, "anemo.ico");
+            string targetUninstall = Path.Combine(targetDir, "Uninstall.exe");
 
             // Desktop shortcut
             if (createDesktopShortcut)
@@ -116,6 +117,13 @@ namespace AnemoInstaller
             // Start menu shortcut
             string startMenu = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), "Anemo Live Wallpaper.lnk");
             CreateShortcut(startMenu, targetExe, targetDir, icoPath, "Anemo Live Wallpaper");
+
+            // Start menu uninstaller shortcut
+            if (File.Exists(targetUninstall))
+            {
+                string uninstLnk = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), "Uninstall Anemo Live Wallpaper.lnk");
+                CreateShortcut(uninstLnk, targetUninstall, targetDir, icoPath, "Uninstall Anemo Live Wallpaper");
+            }
 
             // Windows Startup
             if (runOnStartup)
@@ -132,6 +140,41 @@ namespace AnemoInstaller
                 }
                 catch { }
             }
+
+            // Windows Add/Remove Programs (Settings -> Installed apps) registration
+            try
+            {
+                using (var key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall\AnemoLiveWallpaper"))
+                {
+                    if (key != null)
+                    {
+                        key.SetValue("DisplayName", "Anemo Live Wallpaper");
+                        key.SetValue("DisplayVersion", "1.0.4");
+                        key.SetValue("Publisher", "Anemoia");
+                        key.SetValue("DisplayIcon", File.Exists(icoPath) ? icoPath : targetExe);
+                        key.SetValue("InstallLocation", targetDir);
+                        key.SetValue("UninstallString", "\"" + targetUninstall + "\"");
+                        key.SetValue("QuietUninstallString", "\"" + targetUninstall + "\" /silent");
+                        key.SetValue("URLInfoAbout", "https://anemoias.me");
+                        key.SetValue("HelpLink", "https://github.com/revolverocelot1/anemo-live-wallpaper");
+                        key.SetValue("NoModify", 1, RegistryValueKind.DWord);
+                        key.SetValue("NoRepair", 1, RegistryValueKind.DWord);
+
+                        // Estimated size in KB
+                        long totalBytes = 0;
+                        try
+                        {
+                            foreach (var f in Directory.GetFiles(targetDir, "*.*", SearchOption.AllDirectories))
+                            {
+                                totalBytes += new FileInfo(f).Length;
+                            }
+                            key.SetValue("EstimatedSize", (int)(totalBytes / 1024), RegistryValueKind.DWord);
+                        }
+                        catch { }
+                    }
+                }
+            }
+            catch { }
 
             // Launch immediately
             if (launchNow && File.Exists(targetExe))
@@ -205,7 +248,7 @@ namespace AnemoInstaller
 
             var lblSub = new Label
             {
-                Text = "Interactive 2.5D Living Desktop Engine — v1.0.3",
+                Text = "Interactive 2.5D Living Desktop Engine — v1.0.4",
                 Font = new Font("Segoe UI", 9, FontStyle.Regular),
                 ForeColor = Color.FromArgb(156, 163, 175),
                 Location = new Point(26, 48),

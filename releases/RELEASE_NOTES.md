@@ -1,6 +1,6 @@
-# Anemo Live Wallpaper v1.0.3
+# Anemo Live Wallpaper v1.0.4
 
-Version **1.0.3** addresses desktop visibility on Windows 11 (23H2/24H2), eliminates black screen loading overlays in desktop mode, and enforces strict zero-camera cold booting with minimized memory footprint.
+Version **1.0.4** introduces a native, spotless Windows Uninstaller (`Uninstall.exe`), formal Windows Settings & Control Panel Add/Remove integration, standard application manifests, full PE assembly metadata, and cryptographic Authenticode code signing under **Anemoia**.
 
 ---
 
@@ -8,8 +8,43 @@ Version **1.0.3** addresses desktop visibility on Windows 11 (23H2/24H2), elimin
 
 | Package | Size | Description |
 | :--- | :--- | :--- |
-| **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.3/AnemoSetup.exe)** | **~120.9 MB** | **Recommended.** Single-file standalone installer. Installs to `%LocalAppData%\Programs\Anemo`, provisions Desktop & Start Menu shortcuts, and launches immediately. |
-| **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.3/Anemo-Live-Wallpaper-Portable.zip)** | **~120.8 MB** | **Portable Archive.** Extract to any folder and execute `Anemo.exe` directly without installation or registry writes. |
+| **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.4/AnemoSetup.exe)** | **~121.0 MB** | **Recommended.** Single-file standalone installer. Installs to `%LocalAppData%\Programs\Anemo`, provisions Desktop & Start Menu shortcuts, registers in Windows Settings Installed Apps, and launches immediately. |
+| **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.4/Anemo-Live-Wallpaper-Portable.zip)** | **~120.9 MB** | **Portable Archive.** Extract to any folder and execute `Anemo.exe` directly without installation or registry writes. Includes standalone `Uninstall.exe`. |
+
+---
+
+## What's Changed in v1.0.4
+
+- **Native Windows Uninstaller (`Uninstall.exe`)**:
+  - Implemented a dedicated, dark-themed GUI uninstaller deployed inside `%LocalAppData%\Programs\Anemo\Uninstall.exe`.
+  - Supports silent uninstallation (`/silent` or `/s`) for automation and scripts.
+  - Automatically terminates running wallpaper processes, removes Windows Startup registry values, purges Desktop and Start Menu shortcuts, and completely deletes the installation directory without leftover traces or requiring third-party cleaning tools.
+
+- **Windows Settings & Control Panel Integration**:
+  - Registered in Windows Add/Remove Programs (`HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\AnemoLiveWallpaper`).
+  - Anemo Live Wallpaper now appears natively in Windows 10 & 11 **Settings -> Apps -> Installed apps** and **Control Panel -> Programs and Features** published by **Anemoia**.
+  - Clicking "Uninstall" in Windows Settings directly executes `Uninstall.exe`.
+  - Added an "Uninstall Anemo Live Wallpaper" shortcut in the Start Menu and an "Uninstall Anemo..." option in the System Tray context menu.
+
+- **SmartScreen Mitigation & Publisher Identity (Anemoia)**:
+  - Embedded a Win32 application manifest (`app.manifest`) into all executables specifying execution level `asInvoker` (proving zero administrative privileges required) and Windows 10/11 compatibility.
+  - Added full PE assembly metadata (`AssemblyInfo.cs`): Company name `Anemoia`, Product `Anemo Live Wallpaper`, Copyright, and Version `1.0.4.0`.
+  - Digitally signed all binaries (`AnemoSetup.exe`, `Anemo.exe`, `Uninstall.exe`) with an official **Anemoia** Authenticode certificate and DigiCert RFC 3161 cryptographic timestamps.
+
+---
+
+# Anemo Live Wallpaper v1.0.3
+
+Version **1.0.3** addresses desktop visibility on Windows 11 (23H2/24H2), eliminates black screen loading overlays in desktop mode, and enforces strict zero-camera cold booting with minimized memory footprint.
+
+---
+
+## Downloads (v1.0.3)
+
+| Package | Size | Description |
+| :--- | :--- | :--- |
+| **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.3/AnemoSetup.exe)** | **~120.9 MB** | Single-file standalone installer. |
+| **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.3/Anemo-Live-Wallpaper-Portable.zip)** | **~120.8 MB** | Portable Archive. |
 
 ---
 

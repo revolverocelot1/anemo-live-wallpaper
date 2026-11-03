@@ -710,6 +710,20 @@ namespace AnemoWallpaper
             };
             menu.Items.Add(_miPause);
 
+            string uninstPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Uninstall.exe");
+            if (File.Exists(uninstPath))
+            {
+                menu.Items.Add("Uninstall Anemo...", null, delegate
+                {
+                    if (MessageBox.Show("Do you want to completely uninstall Anemo Live Wallpaper?",
+                        "Uninstall Anemo Live Wallpaper", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        Process.Start(new ProcessStartInfo { FileName = uninstPath, UseShellExecute = true });
+                        ExitApp();
+                    }
+                });
+            }
+
             menu.Items.Add("Exit Anemo", null, delegate { ExitApp(); });
 
             UpdateModeChecks();
