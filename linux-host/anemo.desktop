@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Anemo Live Wallpaper
+Comment=Living 2.5D Interactive Desktop Engine with Parametric Eye Rig
+Exec=anemo
+Icon=anemo
+Terminal=false
+Type=Application
+Categories=Utility;Graphics;Amusement;
+Keywords=wallpaper;live;anime;roxy;2.5D;
+StartupNotify=false
+X-GNOME-Autostart-enabled=false

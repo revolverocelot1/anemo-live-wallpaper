@@ -68,7 +68,21 @@ An ambient, atmospheric soundtrack sourced from *don't think about it anymore* r
 * Download **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.4/Anemo-Live-Wallpaper-Portable.zip)**.
 * Extract to any directory and execute `Anemo.exe`. No elevated permissions or registry modifications required. Includes standalone `Uninstall.exe`.
 
-### 3. Web & Self-Hosted Engine
+### 3. Linux Package (Experimental - X11 & Wayland)
+> [!NOTE]
+> The Linux native host is currently in **Experimental Preview**. It features native Wayland layer-shell and X11 desktop integration, plus fail-safe fallbacks for windowed mode (`anemo --windowed`) and browser mode (`anemo --browser`). Feedback across varied desktop environments is welcome!
+
+* Download **[`Anemo-Live-Wallpaper-Linux-x64.tar.gz`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.4/Anemo-Live-Wallpaper-Linux-x64.tar.gz)** from the official [v1.0.4 Release](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/tag/v1.0.4).
+* Extract and install in user-space (no `sudo` required):
+  ```bash
+  tar -xzf Anemo-Live-Wallpaper-Linux-x64.tar.gz
+  cd anemo-live-wallpaper
+  ./install.sh
+  ```
+* Launch by typing `anemo` in terminal or from your Desktop Application Launcher.
+* Features native X11 desktop type hints, Wayland `gtk-layer-shell` support, AppIndicator system tray, and a clean uninstaller (`uninstall.sh`).
+
+### 4. Web & Self-Hosted Engine
 The web engine runs independently of the Windows host and can be served through any static host:
 
 ```bash

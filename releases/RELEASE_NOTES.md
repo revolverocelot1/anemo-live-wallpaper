@@ -10,10 +10,17 @@ Version **1.0.4** introduces a native, spotless Windows Uninstaller (`Uninstall.
 | :--- | :--- | :--- |
 | **[`AnemoSetup.exe`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.4/AnemoSetup.exe)** | **~121.0 MB** | **Recommended.** Single-file standalone installer. Installs to `%LocalAppData%\Programs\Anemo`, provisions Desktop & Start Menu shortcuts, registers in Windows Settings Installed Apps, and launches immediately. |
 | **[`Anemo-Live-Wallpaper-Portable.zip`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.4/Anemo-Live-Wallpaper-Portable.zip)** | **~120.9 MB** | **Portable Archive.** Extract to any folder and execute `Anemo.exe` directly without installation or registry writes. Includes standalone `Uninstall.exe`. |
+| **[`Anemo-Live-Wallpaper-Linux-x64.tar.gz`](https://github.com/revolverocelot1/anemo-live-wallpaper/releases/download/v1.0.4/Anemo-Live-Wallpaper-Linux-x64.tar.gz)** | **~119.8 MB** | **Linux Package (Experimental Preview - X11 & Wayland).** User-space installer (`install.sh`), uninstaller (`uninstall.sh`), native WebKitGTK engine, AppIndicator tray, and zero-dependency browser fallback (`anemo --browser`). |
 
 ---
 
 ## What's Changed in v1.0.4
+
+- **Experimental Linux Desktop Host (`linux-host/anemo.py`)**:
+  - Dual display server support: Wayland (`gtk-layer-shell`) with runtime GNOME safety checks, and X11 (`_NET_WM_WINDOW_TYPE_DESKTOP`).
+  - Native FreeDesktop AppIndicator tray menu matching the Windows version.
+  - Zero-privilege user-space installation via `install.sh` and clean uninstallation via `uninstall.sh`.
+  - Fail-safe fallback modes: `--windowed` (for floating/tiling WMs) and `--browser` (zero GTK/WebKit required).
 
 - **Native Windows Uninstaller (`Uninstall.exe`)**:
   - Implemented a dedicated, dark-themed GUI uninstaller deployed inside `%LocalAppData%\Programs\Anemo\Uninstall.exe`.

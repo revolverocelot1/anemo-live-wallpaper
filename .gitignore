@@ -9,6 +9,7 @@ web-engine/dist/
 desktop-host/bin/
 desktop-host/obj/
 desktop-host/.cache/
+desktop-host/out/
 
 # Local cache & logs
 *.log
@@ -17,13 +18,18 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 Thumbs.db
+__pycache__/
+*.pyc
 
 # Large release binaries (>100MB: publish directly to GitHub Releases)
 releases/*.exe
 releases/*.zip
+releases/*.tar.gz
 *.exe
 *.zip
+*.tar.gz
 *.7z
+*.cer
 
 # Local development overrides
 *.local

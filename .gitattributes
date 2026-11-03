@@ -1,0 +1,4 @@
+# Guarantee LF line endings for Linux scripts
+*.sh text eol=lf
+*.desktop text eol=lf
+*.py text eol=lf
